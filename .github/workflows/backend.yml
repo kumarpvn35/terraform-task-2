@@ -267,11 +267,9 @@ jobs:
               set -euo pipefail
 
               APP_DIRECTORY="/var/www/dotnet-app"
-              ENV_DIRECTORY="/etc/dotnet-app"
 
               echo "Creating deployment directories..."
               mkdir -p "${APP_DIRECTORY}"
-              mkdir -p "${ENV_DIRECTORY}"
 
               echo "Stopping application..."
               systemctl stop dotnet-app || true
@@ -286,19 +284,6 @@ jobs:
               tar \
                 -xzf /tmp/backend-release.tar.gz \
                 -C "${APP_DIRECTORY}"
-
-              echo "Installing environment configuration..."
-              mv \
-                /tmp/backend-environment \
-                "${ENV_DIRECTORY}/environment"
-
-              chown \
-                root:root \
-                "${ENV_DIRECTORY}/environment"
-
-              chmod \
-                600 \
-                "${ENV_DIRECTORY}/environment"
 
               chown \
                 -R dotnetapp:dotnetapp \
