@@ -36,6 +36,7 @@ variable "database" {
       password     = string
       storage_size = number
       sku_name     = string
+      zone = string
     })
     resource_group = string
     virtual_network = string

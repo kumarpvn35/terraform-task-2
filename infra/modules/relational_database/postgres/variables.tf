@@ -6,6 +6,7 @@ variable "config" {
     password = string
     storage_size = number
     sku_name = string
+    zone = string
   })
 }
 
