@@ -200,8 +200,6 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-          cache: true
-          cache-dependency-path: backend/packages.lock.json
 
       - name: Restore backend
         run: |
