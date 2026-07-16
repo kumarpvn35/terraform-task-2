@@ -18,7 +18,7 @@ concurrency:
 env:
   TF_VERSION: "1.13.5"
   DOTNET_VERSION: "8.0.x"
-  BACKEND_PROJECT: backend/Backend.Api.csproj
+  BACKEND_PROJECT: backend/UserApi/UserApi.csproj
   PUBLISH_DIRECTORY: backend/publish
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
