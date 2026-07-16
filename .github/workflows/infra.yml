@@ -86,7 +86,9 @@ jobs:
           DATABASE_URL="$(echo "$DETAILS" | jq -r '.database_host.database1')"
           VM_PUBLIC_IP="$(echo "$DETAILS" | jq -r '.public_ips.ip1')"
 
+          echo "::add-mask::$DATABASE_URL"
           echo "$DATABASE_URL"
+          
 
           if [ -z "$DATABASE_URL" ] || [ "$DATABASE_URL" = "null" ]; then
             echo "database_host.database1 output was not found."
