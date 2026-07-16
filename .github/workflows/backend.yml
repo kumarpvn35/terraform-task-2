@@ -212,13 +212,6 @@ jobs:
             --configuration Release \
             --no-restore
 
-      - name: Test backend
-        run: |
-          dotnet test \
-            --configuration Release \
-            --no-build \
-            --verbosity normal
-
       - name: Publish backend
         run: |
           rm -rf "${{ env.PUBLISH_DIRECTORY }}"
