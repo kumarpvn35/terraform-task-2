@@ -164,16 +164,18 @@ jobs:
         working-directory: infra-source/infra
         shell: bash
         run: |
-          DATABASE_URL="$(terraform output -raw database_url)"
-          VM_PUBLIC_IP="$(terraform output -raw vm_public_ip)"
+          set -euo pipefail
+          DETAILS="$(terraform output -json details)"
+          DATABASE_URL="$(jq -r '.database_host.database1' <<< "$DETAILS")"
+          VM_PUBLIC_IP="$(jq -r '.public_ips.ip1' <<< "$DETAILS")"
 
-          if [ -z "${DATABASE_URL}" ]; then
-            echo "database_url Terraform output is empty."
+          if [ -z "$DATABASE_URL" ] || [ "$DATABASE_URL" = "null" ]; then
+            echo "Terraform output details.database_host.database1 is missing."
             exit 1
           fi
 
-          if [ -z "${VM_PUBLIC_IP}" ]; then
-            echo "vm_public_ip Terraform output is empty."
+          if [ -z "$VM_PUBLIC_IP" ] || [ "$VM_PUBLIC_IP" = "null" ]; then
+            echo "Terraform output details.public_ips.ip1 is missing."
             exit 1
           fi
 
@@ -189,6 +191,10 @@ jobs:
 
             echo "VM_PUBLIC_IP=${VM_PUBLIC_IP}"
           } >> "$GITHUB_ENV"
+
+          echo "vm_public_ip=$VM_PUBLIC_IP" >> "$GITHUB_OUTPUT"
+
+          echo "Terraform outputs loaded successfully."
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
