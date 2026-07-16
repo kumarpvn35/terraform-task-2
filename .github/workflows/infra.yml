@@ -80,6 +80,9 @@ jobs:
           echo "Infrastructure deployment completed."
 
           DETAILS="$(terraform output -json details)"
+
+          echo "$DETAILS"
+
           DATABASE_URL="$(echo "$DETAILS" | jq -r '.database_host.database1')"
           VM_PUBLIC_IP="$(echo "$DETAILS" | jq -r '.public_ips.ip1')"
 
