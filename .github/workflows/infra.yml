@@ -76,7 +76,6 @@ jobs:
 
       - name: Display non-sensitive outputs
         working-directory: ${{ env.TF_WORKING_DIRECTORY }}
-        shell: bash
         run: |
           echo "Infrastructure deployment completed."
 
@@ -92,7 +91,7 @@ jobs:
             echo "public_ips.ip1 output was not found."
             exit 1
           fi
-          
+
           echo "::add-mask::$DATABASE_URL"
 
           {
