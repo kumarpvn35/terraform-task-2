@@ -1,12 +1,12 @@
 variable "config" {
   type = object({
-    name = string
-    version = string
-    username = string
-    password = string
+    name         = string
+    version      = string
+    username     = string
+    password     = string
     storage_size = number
-    sku_name = string
-    zone = string
+    sku_name     = string
+    zone         = string
   })
 }
 

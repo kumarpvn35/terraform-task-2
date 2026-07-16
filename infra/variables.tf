@@ -17,8 +17,8 @@ variable "virtual_networks" {
       delication_config = optional(object({
         name = string
         details = object({
-            name = string
-            actions = list(string)
+          name    = string
+          actions = list(string)
         })
       }))
     })), {})
@@ -36,11 +36,11 @@ variable "database" {
       password     = string
       storage_size = number
       sku_name     = string
-      zone = string
+      zone         = string
     })
-    resource_group = string
+    resource_group  = string
     virtual_network = string
-    subnet = string
+    subnet          = string
   }))
 }
 
@@ -76,20 +76,20 @@ variable "network_security_groups" {
 
 variable "vm_config" {
   type = map(object({
-    name = string
-    vnet = string
-    subnet = string
+    name           = string
+    vnet           = string
+    subnet         = string
     resource_group = string
-    nic_name = string
-    nsg_name = string
-    public_ip = string
+    nic_name       = string
+    nsg_name       = string
+    public_ip      = string
   }))
 }
 
 
 variable "public_ips" {
   type = map(object({
-    name = string
+    name           = string
     resource_group = string
   }))
 }

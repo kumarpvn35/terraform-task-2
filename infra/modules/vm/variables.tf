@@ -5,7 +5,7 @@ variable "vm_name" {
 
 variable "nic_name" {
   description = "value of the network security group name."
-    type        = string
+  type        = string
 }
 
 variable "subnet_id" {
@@ -15,8 +15,8 @@ variable "subnet_id" {
 
 variable "resource_group" {
   description = "The name of the Azure resource group."
-  type        = object({
-    name = string,
+  type = object({
+    name     = string,
     location = string
   })
 }

@@ -4,8 +4,8 @@ variable "public_ip_name" {
 
 variable "resource_group" {
   description = "The name of the Azure resource group."
-  type        = object({
-    name = string,
+  type = object({
+    name     = string,
     location = string
   })
 }
