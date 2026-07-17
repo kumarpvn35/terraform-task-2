@@ -25,7 +25,11 @@ env:
 jobs:
   infrastructure:
     name: Check and Apply Infrastructure
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+      - dotnet-production
 
     environment: production
 
@@ -121,7 +125,11 @@ jobs:
 
   backend:
     name: Build and Deploy Backend
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+      - dotnet-production
 
     needs:
       - infrastructure

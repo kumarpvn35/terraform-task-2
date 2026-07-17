@@ -36,20 +36,6 @@ virtual_networks = {
 
 
 database = {
-  "database1" = {
-    config = {
-      name         = "test-database-8025"
-      version      = "16"
-      username     = "kumarpvn35"
-      password     = "Ffjk8ckmpx@123"
-      sku_name     = "B_Standard_B1ms"
-      storage_size = 32768
-      zone         = "1"
-    }
-    resource_group  = "rg1"
-    virtual_network = "vnet1"
-    subnet          = "postgres_subnet"
-  }
 }
 
 
