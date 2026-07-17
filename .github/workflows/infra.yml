@@ -74,32 +74,32 @@ jobs:
             -auto-approve \
             tfplan
 
-      - name: Display non-sensitive outputs
-        working-directory: ${{ env.TF_WORKING_DIRECTORY }}
-        run: |
-          echo "Infrastructure deployment completed."
+      # - name: Display non-sensitive outputs
+      #   working-directory: ${{ env.TF_WORKING_DIRECTORY }}
+      #   run: |
+      #     echo "Infrastructure deployment completed."
 
-          DETAILS="$(terraform output -json details)"
+      #     DETAILS="$(terraform output -json details)"
 
-          DATABASE_URL="$(echo "$DETAILS" | jq -r '.database_host.database1')"
-          VM_PUBLIC_IP="$(echo "$DETAILS" | jq -r '.public_ips.ip1')"
+      #     DATABASE_URL="$(echo "$DETAILS" | jq -r '.database_host.database1')"
+      #     VM_PUBLIC_IP="$(echo "$DETAILS" | jq -r '.public_ips.ip1')"
 
-          if [ -z "$DATABASE_URL" ] || [ "$DATABASE_URL" = "null" ]; then
-            echo "database_host.database1 output was not found."
-            exit 1
-          fi
-          if [ -z "$VM_PUBLIC_IP" ] || [ "$VM_PUBLIC_IP" = "null" ]; then
-            echo "public_ips.ip1 output was not found."
-            exit 1
-          fi
+      #     if [ -z "$DATABASE_URL" ] || [ "$DATABASE_URL" = "null" ]; then
+      #       echo "database_host.database1 output was not found."
+      #       exit 1
+      #     fi
+      #     if [ -z "$VM_PUBLIC_IP" ] || [ "$VM_PUBLIC_IP" = "null" ]; then
+      #       echo "public_ips.ip1 output was not found."
+      #       exit 1
+      #     fi
 
-          echo "::add-mask::$DATABASE_URL"
+      #     echo "::add-mask::$DATABASE_URL"
 
-          {
-            echo "DATABASE_URL<<EOF"
-            echo "$DATABASE_URL"
-            echo "EOF"
-            echo "VM_PUBLIC_IP=$VM_PUBLIC_IP"
-          } >> "$GITHUB_ENV"
+      #     {
+      #       echo "DATABASE_URL<<EOF"
+      #       echo "$DATABASE_URL"
+      #       echo "EOF"
+      #       echo "VM_PUBLIC_IP=$VM_PUBLIC_IP"
+      #     } >> "$GITHUB_ENV"
       
-          echo "vm_public_ip=$VM_PUBLIC_IP" >> "$GITHUB_OUTPUT"
+      #     echo "vm_public_ip=$VM_PUBLIC_IP" >> "$GITHUB_OUTPUT"
