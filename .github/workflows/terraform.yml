@@ -1,0 +1,63 @@
+name: Terraform Multi-Stage Deployment
+
+on:
+    pull_request:
+        branches:
+            - main
+        paths:
+            - "infra/**"
+            - ".github/workflows/terraform.yml"
+
+    push:
+        branches:
+            - main
+        paths:
+            - "infra/**"
+            - ".github/workflows/terraform.yml"
+
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    id-token: write
+
+concurrency:
+    group: terraform-${{ github.ref }}
+    cancel-in-progress: false
+
+env:
+    TF_VERSION: "1.14.0"
+    TF_WORKING_DIRECTORY: "infra"
+    TF_IN_AUTOMATION: "true"
+    TF_INPUT: "false"
+
+jobs:
+    # ============================================================
+    # 1. STATIC VALIDATION
+    # ============================================================
+
+    validate:
+        name: Terraform Validate
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3
+              with:
+                  terraform_version: ${{ env.TF_VERSION }}
+                  terraform_wrapper: false
+
+            - name: Check Terraform formatting
+              working-directory: ${{ env.TF_WORKING_DIRECTORY }}
+              run: terraform fmt -check -recursive
+
+            - name: Initialize Terraform without backend
+              working-directory: ${{ env.TF_WORKING_DIRECTORY }}
+              run: terraform init -backend=false
+
+            - name: Validate Terraform configuration
+              working-directory: ${{ env.TF_WORKING_DIRECTORY }}
+              run: terraform validate
