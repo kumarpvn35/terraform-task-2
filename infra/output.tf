@@ -14,5 +14,4 @@ output "details" {
       name => ip.public_ip.address
     }
   }
-  sensitive = true
 }
