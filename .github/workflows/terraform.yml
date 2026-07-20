@@ -135,60 +135,60 @@ jobs:
                   retention-days: 5
                   if-no-files-found: error
 
-    # # ============================================================
-    # # 3. DEV APPLY
-    # # Runs only after merge/push to main
-    # # ============================================================
+    # ============================================================
+    # 3. DEV APPLY
+    # Runs only after merge/push to main
+    # ============================================================
 
-    # dev-apply:
-    #     name: Dev - Terraform Apply
-    #     runs-on: ubuntu-latest
+    dev-apply:
+        name: Dev - Terraform Apply
+        runs-on: ubuntu-latest
 
-    #     needs:
-    #         - dev-plan
+        needs:
+            - dev-plan
 
-    #     if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request'
 
-    #     environment:
-    #         name: dev
+        environment:
+            name: dev
 
-    #     env:
-    #         ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID_DEV }}
-    #         ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
-    #         ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID_DEV }}
-    #         ARM_USE_OIDC: "true"
-    #         ARM_USE_AZUREAD: "true"
+        env:
+            ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID_DEV }}
+            ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+            ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID_DEV }}
+            ARM_USE_OIDC: "true"
+            ARM_USE_AZUREAD: "true"
 
-    #     steps:
-    #         - name: Checkout repository
-    #           uses: actions/checkout@v4
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
 
-    #         - name: Setup Terraform
-    #           uses: hashicorp/setup-terraform@v3
-    #           with:
-    #               terraform_version: ${{ env.TF_VERSION }}
-    #               terraform_wrapper: false
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3
+              with:
+                  terraform_version: ${{ env.TF_VERSION }}
+                  terraform_wrapper: false
 
-    #         - name: Azure login using OIDC
-    #           uses: azure/login@v2
-    #           with:
-    #               client-id: ${{ vars.AZURE_CLIENT_ID_DEV }}
-    #               tenant-id: ${{ vars.AZURE_TENANT_ID }}
-    #               subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID_DEV }}
+            - name: Azure login using OIDC
+              uses: azure/login@v2
+              with:
+                  client-id: ${{ vars.AZURE_CLIENT_ID_DEV }}
+                  tenant-id: ${{ vars.AZURE_TENANT_ID }}
+                  subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID_DEV }}
 
-    #         - name: Initialize Dev backend
-    #           working-directory: ${{ env.TF_WORKING_DIRECTORY }}
-    #           run: |
-    #               terraform init \
-    #                   -reconfigure \
-    #                   -backend-config="backend/dev.hcl"
+            - name: Initialize Dev backend
+              working-directory: ${{ env.TF_WORKING_DIRECTORY }}
+              run: |
+                  terraform init \
+                      -reconfigure \
+                      -backend-config="environments/dev/backend.hcl"
 
-    #         - name: Download Dev Terraform plan
-    #           uses: actions/download-artifact@v4
-    #           with:
-    #               name: dev-terraform-plan
-    #               path: infra
+            - name: Download Dev Terraform plan
+              uses: actions/download-artifact@v4
+              with:
+                  name: dev-terraform-plan
+                  path: infra
 
-    #         - name: Apply Dev Terraform plan
-    #           working-directory: ${{ env.TF_WORKING_DIRECTORY }}
-    #           run: terraform apply -auto-approve dev.tfplan
+            - name: Apply Dev Terraform plan
+              working-directory: ${{ env.TF_WORKING_DIRECTORY }}
+              run: terraform apply -auto-approve dev.tfplan
