@@ -91,7 +91,7 @@ vm_config = {
     subnet         = "subnet1"
     resource_group = "rg1"
     nic_name       = "dotnet-nic-prod"
-    nsg_name       = "nsg1-prod"
+    nsg_name       = "nsg1"
     public_ip      = "ip1"
   }
 }
