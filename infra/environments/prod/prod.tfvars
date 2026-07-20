@@ -93,6 +93,7 @@ vm_config = {
     nic_name       = "dotnet-nic-prod"
     nsg_name       = "nsg1"
     public_ip      = "ip1"
+    key_name       = "secret1"
   }
 }
 
@@ -101,5 +102,14 @@ public_ips = {
   "ip1" = {
     name           = "public-ip-for-dotnet-prod"
     resource_group = "rg1"
+  }
+}
+
+
+vault_secrets = {
+  "secret1" = {
+    name           = "ssh-prod"
+    rg             = "manual"
+    key_vault_name = "key-vault-8025"
   }
 }

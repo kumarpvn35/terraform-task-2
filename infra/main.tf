@@ -49,9 +49,12 @@ module "database" {
 
 
 module "key_vault" {
-  source              = "./modules/key_vault"
-  key_vault_name      = var.key_vault_name
-  resource_group_name = var.key_vault_rg
+  source   = "./modules/key_vault"
+  for_each = var.vault_secrets
+
+  key_vault_name      = each.value.key_vault_name
+  name                = each.value.name
+  resource_group_name = each.value.rg
   public_key_data     = file("${path.module}/sample.pub")
 }
 
@@ -85,6 +88,6 @@ module "vm" {
   resource_group   = module.rg[each.value.resource_group].rg
   nic_name         = each.value.nic_name
   nsg_id           = module.nsg[each.value.nsg_name].nsg.id
-  public_key_value = module.key_vault.key_vault_secret.value
+  public_key_value = module.key_vault[each.value.key_name].key_vault_secret.value
   public_ip_id     = module.public_ips[each.value.public_ip].public_ip.id
 }

@@ -44,17 +44,6 @@ variable "database" {
   }))
 }
 
-
-variable "key_vault_name" {
-  type = string
-}
-
-
-variable "key_vault_rg" {
-  type = string
-}
-
-
 variable "network_security_groups" {
   type = map(object({
     name           = string
@@ -83,6 +72,7 @@ variable "vm_config" {
     nic_name       = string
     nsg_name       = string
     public_ip      = string
+    key_name       = string
   }))
 }
 
@@ -91,5 +81,14 @@ variable "public_ips" {
   type = map(object({
     name           = string
     resource_group = string
+  }))
+}
+
+
+variable "vault_secrets" {
+  type = map(object({
+    key_vault_name = string
+    name           = string
+    rg             = string
   }))
 }

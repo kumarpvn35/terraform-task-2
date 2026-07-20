@@ -4,7 +4,7 @@ data "azurerm_key_vault" "vault" {
 }
 
 resource "azurerm_key_vault_secret" "ssh-public-key" {
-  name         = "ssh-public-key"
+  name         = var.name
   value        = var.public_key_data
   key_vault_id = data.azurerm_key_vault.vault.id
 }

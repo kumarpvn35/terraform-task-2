@@ -1,5 +1,11 @@
-key_vault_name = "key-vault-8025"
-key_vault_rg   = "manual"
+vault_secrets = {
+  "secret1" = {
+    name           = "ssh-dev"
+    rg             = "manual"
+    key_vault_name = "key-vault-8025"
+  }
+}
+
 
 resource_groups = {
   "rg1" = {
@@ -93,6 +99,7 @@ vm_config = {
     nic_name       = "dotnet-nic"
     nsg_name       = "nsg1"
     public_ip      = "ip1"
+    key_name       = "secret1"
   }
 }
 
