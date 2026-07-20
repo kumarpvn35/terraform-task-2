@@ -102,13 +102,13 @@ jobs:
               run: |
                   terraform init \
                     -reconfigure \
-                    -backend-config="backend/dev.hcl"
+                    -backend-config="environments/dev/backend.hcl"
 
             - name: Create Dev plan
               working-directory: ${{ env.TF_WORKING_DIRECTORY }}
               run: |
                   terraform plan \
-                    -var-file="environments/dev.tfvars" \
+                    -var-file="environments/dev/dev.tfvars" \
                     -out="dev.tfplan"
 
             - name: Generate readable Dev plan
