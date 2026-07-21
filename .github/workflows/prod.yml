@@ -1,4 +1,4 @@
-name: Terraform Multi-Stage Deployment
+name: Deploy Prod Environment
 
 on:
   push:

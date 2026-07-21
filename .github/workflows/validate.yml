@@ -1,4 +1,4 @@
-name: validate config
+name: Validate Config For Dev,Stage and Prod
 
 on:
   pull_request:
