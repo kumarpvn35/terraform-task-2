@@ -65,7 +65,6 @@ module "nsg" {
   for_each = var.network_security_groups
 
   name           = each.value.name
-  rules          = each.value.rules
   resource_group = module.rg[each.value.resource_group].rg
 }
 
@@ -90,4 +89,17 @@ module "vm" {
   nsg_id           = module.nsg[each.value.nsg_name].nsg.id
   public_key_value = module.key_vault[each.value.key_name].key_vault_secret.value
   public_ip_id     = module.public_ips[each.value.public_ip].public_ip.id
+}
+
+
+module "nsg_rules" {
+  for_each = var.nsg_rules
+
+  source         = "./modules/NSG_rules"
+  rule_config    = each.value
+  resource_group = module.rg[each.value.rg].rg
+  nsgs = [
+    for nsg_name in each.value.nsgs :
+    module.nsg[nsg_name].nsg.name
+  ]
 }
