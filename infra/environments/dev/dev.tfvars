@@ -16,6 +16,16 @@ resource_groups = {
     name     = "resource_group_2"
     location = "centralindia"
   }
+
+  "rg3" = {
+    name     = "resource_group_3"
+    location = "centralindia"
+  }
+
+  "rg4" = {
+    name     = "resource_group_4"
+    location = "centralindia"
+  }
 }
 
 

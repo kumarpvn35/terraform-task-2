@@ -1,0 +1,133 @@
+name: Deploy Stage Environment
+
+on:
+    push:
+        branches:
+            - stage
+        paths:
+            - "infra/**"
+            - ".github/workflows/stage.yml"
+
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    id-token: write
+
+concurrency:
+    group: terraform-${{ github.ref }}
+    cancel-in-progress: false
+
+env:
+    TF_VERSION: "1.14.0"
+    TF_WORKING_DIRECTORY: "infra"
+    TF_IN_AUTOMATION: "true"
+    TF_INPUT: "false"
+
+jobs:
+    stage-plan:
+        name: Stage - Terraform Plan
+        runs-on: ubuntu-latest
+
+        env:
+            ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+            ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+            ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+            ARM_USE_OIDC: "true"
+            ARM_USE_AZUREAD: "true"
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3
+              with:
+                  terraform_version: ${{ env.TF_VERSION }}
+                  terraform_wrapper: false
+
+            - name: Azure login using OIDC
+              uses: azure/login@v2
+              with:
+                  client-id: ${{ vars.AZURE_CLIENT_ID }}
+                  tenant-id: ${{ vars.AZURE_TENANT_ID }}
+                  subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+            - name: Initialize Stage backend
+              working-directory: ${{ env.TF_WORKING_DIRECTORY }}
+              run: |
+                  terraform init \
+                    -reconfigure \
+                    -backend-config="environments/stage/backend.hcl"
+
+            - name: Create Stage plan
+              working-directory: ${{ env.TF_WORKING_DIRECTORY }}
+              run: |
+                  terraform plan \
+                    -var-file="environments/stage/stage.tfvars" \
+                    -out="stage.tfplan"
+
+            - name: Generate readable Stage plan
+              working-directory: ${{ env.TF_WORKING_DIRECTORY }}
+              run: terraform show -no-color stage.tfplan > stage-plan.txt
+
+            - name: Upload Stage Terraform plan
+              uses: actions/upload-artifact@v4
+              with:
+                  name: stage-terraform-plan
+                  path: |
+                      infra/stage.tfplan
+                      infra/stage-plan.txt
+                  retention-days: 1
+                  if-no-files-found: error
+
+    stage-apply:
+        name: Stage - Terraform Apply
+        runs-on: ubuntu-latest
+
+        needs:
+            - stage-plan
+
+        environment:
+            name: stage
+
+        env:
+            ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+            ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+            ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+            ARM_USE_OIDC: "true"
+            ARM_USE_AZUREAD: "true"
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3
+              with:
+                  terraform_version: ${{ env.TF_VERSION }}
+                  terraform_wrapper: false
+
+            - name: Azure login using OIDC
+              uses: azure/login@v2
+              with:
+                  client-id: ${{ vars.AZURE_CLIENT_ID }}
+                  tenant-id: ${{ vars.AZURE_TENANT_ID }}
+                  subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+            - name: Initialize Stage backend
+              working-directory: ${{ env.TF_WORKING_DIRECTORY }}
+              run: |
+                  terraform init \
+                    -reconfigure \
+                    -backend-config="environments/stage/backend.hcl"
+
+            - name: Download Stage Terraform plan
+              uses: actions/download-artifact@v4
+              with:
+                  name: stage-terraform-plan
+                  path: infra
+
+            - name: Apply Stage Terraform plan
+              working-directory: ${{ env.TF_WORKING_DIRECTORY }}
+              run: terraform apply -auto-approve stage.tfplan

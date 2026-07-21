@@ -117,9 +117,6 @@ jobs:
     needs:
       - configure
 
-    environment:
-      name: ${{ inputs.environment }}
-
     env:
       ARM_CLIENT_ID: ${{ needs.configure.outputs.client_id }}
       ARM_TENANT_ID: ${{ needs.configure.outputs.tenant_id }}
@@ -230,11 +227,6 @@ jobs:
     needs:
       - configure
       - destroy-plan
-
-    # For public repositories or Enterprise plans, configure
-    # required reviewers on the corresponding environment.
-    environment:
-      name: ${{ inputs.environment }}
 
     env:
       ARM_CLIENT_ID: ${{ needs.configure.outputs.client_id }}
