@@ -92,3 +92,20 @@ variable "vault_secrets" {
     rg             = string
   }))
 }
+
+
+variable "nsg_rules" {
+  type = map(object({
+    name                       = string
+    protocol                   = string
+    direction                  = string
+    access                     = string
+    priority                   = number
+    source_port_range          = string
+    source_address_prefix      = string
+    destination_port_range     = string
+    destination_address_prefix = string
+    nsgs                       = list(string)
+    rg                         = string
+  }))
+}
