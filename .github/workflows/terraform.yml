@@ -7,8 +7,6 @@ on:
     paths:
       - "infra/**"
       - ".github/workflows/terraform.yml"
-    paths-ignore:
-      - ".github/workflows/terraform-destroy.yml"
 
   push:
     branches:
@@ -16,8 +14,6 @@ on:
     paths:
       - "infra/**"
       - ".github/workflows/terraform.yml"
-    paths-ignore:
-      - ".github/workflows/terraform-destroy.yml"
 
   workflow_dispatch:
 
